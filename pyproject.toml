@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iotflow-dsl"
+version = "0.1.0"
+description = "IoTFlow DSL: A domain-specific language for IoT system modeling."
+authors = [
+    { name = "Dušica Trbović" }
+]
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+
+[tool.setuptools.packages.find]
+where = ["."]
