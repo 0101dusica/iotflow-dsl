@@ -1,0 +1,13 @@
+sensor TemperatureSensor {
+    type: DHT22
+    unit: celsius
+}
+
+actuator Fan {
+    type: relay
+}
+
+rule HighTemperature {
+    when TemperatureSensor.value > 30
+    then Fan.turn_on
+}
