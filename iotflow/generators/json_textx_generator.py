@@ -11,7 +11,7 @@ from .json_generator import generate_json
 
 
 @generator('iotflow', 'json')
-def json_generator_cli(metamodel, model, output_path, overwrite, debug):
+def json_generator_cli(metamodel, model, output_path, overwrite, debug=False):
     """
     textX CLI generator for converting IoTFlow models to JSON.
     
