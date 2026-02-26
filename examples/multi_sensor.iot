@@ -1,0 +1,41 @@
+sensor TemperatureSensor {
+    type: DHT22
+    unit: celsius
+}
+
+sensor HumiditySensor {
+    type: DHT22
+    unit: percent
+}
+
+sensor MotionDetector {
+    type: PIR
+    unit: boolean
+}
+
+actuator Fan {
+    type: relay
+}
+
+actuator Heater {
+    type: relay
+}
+
+actuator AlarmBuzzer {
+    type: buzzer
+}
+
+rule ComfortControl {
+    when TemperatureSensor.value > 25
+    then Fan.turn_on
+}
+
+rule HeatingControl {
+    when TemperatureSensor.value < 18
+    then Heater.turn_on
+}
+
+rule SecurityAlert {
+    when MotionDetector.value == 1
+    then AlarmBuzzer.activate
+}

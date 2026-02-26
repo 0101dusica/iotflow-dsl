@@ -1,0 +1,37 @@
+sensor PressureSensor {
+    type: BMP180
+    unit: pascal
+}
+
+sensor LightSensor {
+    type: LDR
+    unit: lux
+}
+
+actuator Pump {
+    type: water_pump
+}
+
+actuator LED {
+    type: led_strip
+}
+
+rule LowPressureAlert {
+    when PressureSensor.value <= 1000
+    then Pump.emergency_stop
+}
+
+rule HighPressureControl {
+    when PressureSensor.value >= 1200
+    then Pump.reduce_power
+}
+
+rule DarkDetection {
+    when LightSensor.value < 100
+    then LED.turn_on
+}
+
+rule BrightDetection {
+    when LightSensor.value != 0
+    then LED.adjust_brightness
+}

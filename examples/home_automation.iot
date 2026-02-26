@@ -1,0 +1,41 @@
+sensor OutdoorTemp {
+    type: DS18B20
+    unit: celsius
+}
+
+sensor IndoorTemp {
+    type: DHT22
+    unit: celsius
+}
+
+sensor WindowSensor {
+    type: magnetic_reed
+    unit: boolean
+}
+
+actuator Thermostat {
+    type: smart_thermostat
+}
+
+actuator WindowBlinds {
+    type: stepper_motor
+}
+
+actuator SecuritySystem {
+    type: alarm_panel
+}
+
+rule WinterHeating {
+    when OutdoorTemp.value < 5
+    then Thermostat.set_heating
+}
+
+rule SummerCooling {
+    when IndoorTemp.value > 26
+    then WindowBlinds.close
+}
+
+rule SecurityCheck {
+    when WindowSensor.value == 1
+    then SecuritySystem.alert
+}
