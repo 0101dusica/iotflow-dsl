@@ -191,6 +191,12 @@ iotflow-dsl/
 
 ---
 
+## Editor Support
+
+See [Editor Setup Instructions](docs/editor-setup.md)
+
+---
+
 ## License
 
 This project is licensed under an OSI-approved open-source license.  
