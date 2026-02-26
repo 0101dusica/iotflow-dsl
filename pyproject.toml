@@ -18,3 +18,9 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[project.entry-points."textx_languages"]
+iotflow = "iotflow.language:iotflow_language"
+
+[project.entry-points."textx_generators"]
+"iotflow_json" = "iotflow.generators.json_textx_generator:json_generator_cli"
