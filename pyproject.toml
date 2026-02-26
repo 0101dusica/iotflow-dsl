@@ -16,11 +16,32 @@ dependencies = [
     "textX>=3.0.0"
 ]
 
+keywords = ["dsl", "textx", "iot", "language-engineering", "domain-specific-language"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Code Generators", 
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+Repository = "https://github.com/0101dusica/iotflow-dsl"
+
 [tool.setuptools.packages.find]
 where = ["."]
+
+[tool.setuptools.package-data]
+iotflow = ["grammar/*.tx"]
 
 [project.entry-points."textx_languages"]
 iotflow = "iotflow.language:iotflow_language"
 
 [project.entry-points."textx_generators"]
-"iotflow_json" = "iotflow.generators.json_textx_generator:json_generator_cli"
+json = "iotflow.generators.json_textx_generator:json_generator_cli"
