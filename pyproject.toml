@@ -12,6 +12,9 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }
+dependencies = [
+    "textX>=3.0.0"
+]
 
 [tool.setuptools.packages.find]
 where = ["."]

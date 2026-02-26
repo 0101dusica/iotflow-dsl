@@ -1,0 +1,73 @@
+// IoTFlow DSL Grammar
+// Basic grammar for IoT device definitions and rules
+
+Model:
+    elements*=Element
+;
+
+Element:
+    Sensor | Actuator | Rule
+;
+
+Sensor:
+    'sensor' name=ID '{'
+        properties*=SensorProperty
+    '}'
+;
+
+SensorProperty:
+    TypeProperty | UnitProperty
+;
+
+TypeProperty:
+    'type:' value=ID
+;
+
+UnitProperty:
+    'unit:' value=ID
+;
+
+Actuator:
+    'actuator' name=ID '{'
+        properties*=ActuatorProperty
+    '}'
+;
+
+ActuatorProperty:
+    TypeProperty
+;
+
+Rule:
+    'rule' name=ID '{'
+        when_clause=WhenClause
+        then_clause=ThenClause
+    '}'
+;
+
+WhenClause:
+    'when' condition=Condition
+;
+
+ThenClause:
+    'then' action=Action
+;
+
+Condition:
+    sensor_ref=SensorRef '.' 'value' operator=ComparisonOperator value=NUMBER
+;
+
+SensorRef:
+    sensor_name=ID
+;
+
+ComparisonOperator:
+    '>' | '<' | '>=' | '<=' | '==' | '!='
+;
+
+Action:
+    actuator_ref=ActuatorRef '.' action_name=ID
+;
+
+ActuatorRef:
+    actuator_name=ID
+;
