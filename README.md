@@ -1,36 +1,40 @@
+
 # IoTFlow DSL
 
 IoTFlow DSL is a domain-specific language for modeling, validating, and generating configurations for Internet of Things (IoT) systems.  
-The language is designed to provide a clear and structured way to describe IoT devices, their properties, and rule-based behavior in a technology-agnostic manner.
+The language provides a structured and technology-agnostic way to describe IoT devices, their properties, and rule-based behavior.
 
-This project is developed as part of an academic course focused on domain-specific languages, language engineering, and tooling support using the **textX** framework.
+This project was developed as part of an academic course focused on **Domain-Specific Languages (DSLs)** and language engineering using the **textX** framework.
 
 ---
 
 ## Motivation
 
-Modeling IoT systems often involves combining multiple concepts such as sensors, actuators, and conditional logic. Using a general-purpose language for this task can lead to verbose and error-prone configurations.
+Modeling IoT systems often involves combining sensors, actuators, and conditional logic. Using general-purpose programming languages for configuration can lead to verbose and error-prone setups.
 
 IoTFlow DSL aims to:
-- simplify IoT system specification,
-- provide early validation of common modeling errors,
-- enable automated generation of configuration artifacts,
-- offer editor support through the Language Server Protocol (LSP).
+
+- Simplify IoT system specification
+- Provide early semantic validation of modeling errors
+- Enable automated configuration generation
+- Offer CLI integration through textX
+- Support editor tooling via Language Server Protocol (LSP)
 
 ---
 
 ## Features
 
 - DSL for defining IoT devices (sensors and actuators)
-- Rule-based behavior definition using `when–then` constructs
+- Rule-based behavior definition using `when-then` constructs
 - Semantic validation of models
-- Code and configuration generation
-- Editor support (syntax highlighting and code completion)
+- JSON configuration generation
+- textX CLI integration
 - Installable Python package
+- Ready for editor support (textX-LS)
 
 ---
 
-## Example
+## Example Model
 
 ```dsl
 sensor TemperatureSensor {
@@ -50,18 +54,6 @@ rule HighTemperatureRule {
 
 ---
 
-## Architecture Overview
-
-The project consists of the following main components:
-
-- **Grammar definition** – implemented using textX
-- **Semantic validation layer** – ensures model correctness
-- **Generators** – produce configuration artifacts from models
-- **Language Server** – enables editor features such as completion and highlighting
-- **CLI integration** – allows model processing via command line
-
----
-
 ## Installation
 
 ### Prerequisites
@@ -69,58 +61,119 @@ The project consists of the following main components:
 - Python 3.9+
 - Virtual environment tool (recommended)
 
-### Install from source
+### Install from Source
 
 ```bash
 git clone https://github.com/0101dusica/iotflow-dsl.git
 cd iotflow-dsl
+
 python -m venv venv
 source venv/bin/activate
+
 pip install -e .
+pip install textX[cli]
 ```
+
+---
+
+## Verify Installation
+
+Check that the language and generator are registered:
+
+```bash
+textx list-languages
+textx list-generators
+```
+
+You should see:
+
+- `iotflow` language
+- `json` generator for iotflow
 
 ---
 
 ## Usage
 
-### Parsing a model
+### Validate a Model
 
 ```bash
-textx check examples/example.iot
+textx check examples/basic.iot
 ```
 
-### Generating artifacts
+### Generate JSON Configuration
 
 ```bash
-textx generate examples/example.iot
+textx generate examples/basic.iot --target json
 ```
 
-Generated files will be placed in the configured output directory.
+This will generate a JSON file in the same directory as the model file.
 
 ---
 
-## Editor Support
+## Example Generated Output
 
-IoTFlow DSL provides editor support via the **Language Server Protocol** using `textX-LS`.
+```json
+{
+    "sensors": [
+        {
+            "name": "TemperatureSensor",
+            "type": "DHT22",
+            "unit": "celsius"
+        }
+    ],
+    "actuators": [
+        {
+            "name": "Fan",
+            "type": "relay"
+        }
+    ],
+    "rules": [
+        {
+            "name": "HighTemperatureRule",
+            "condition": {
+                "sensor": "TemperatureSensor",
+                "attribute": "value",
+                "operator": ">",
+                "value": 30
+            },
+            "action": {
+                "actuator": "Fan",
+                "command": "turn_on"
+            }
+        }
+    ]
+}
+```
 
-Supported features:
-- Syntax highlighting
-- Code completion
-- Basic diagnostics
+---
 
-The language server can be used with editors such as **VS Code**.
+## Build Wheel Package (Optional)
+
+To build a distributable wheel:
+
+```bash
+pip install build
+python -m build
+```
+
+Install from the generated wheel:
+
+```bash
+pip install dist/iotflow_dsl-0.1.0-py3-none-any.whl
+```
 
 ---
 
 ## Project Structure
 
-```text
+```
 iotflow-dsl/
 ├── iotflow/
 │   ├── grammar/
 │   ├── validators/
 │   ├── generators/
-│   └── cli.py
+│   ├── language.py
+│   └── ...
 ├── examples/
 ├── pyproject.toml
 └── README.md
@@ -130,21 +183,22 @@ iotflow-dsl/
 
 ## Development and Project Management
 
-- The project is hosted on GitHub as an open-source repository
-- Tasks are tracked using GitHub Issues
-- Project progress is managed using a Kanban board
-- All evaluated work is available on the `main` branch
-- Commits are linked to corresponding issues
+- Open-source project hosted on GitHub
+- Tasks tracked using GitHub Issues
+- Progress managed via Kanban board
+- All evaluated work available on the `main` branch
+- Commits linked to corresponding issues
 
 ---
 
 ## License
 
 This project is licensed under an OSI-approved open-source license.  
-The specific license is defined in the repository.
+See the LICENSE file for details.
 
 ---
 
 ## Author
 
-R2 26/2025 Dušica Trbović
+R2 26/2025 Dušica Trbović  
+Master Studies - Software Engineering
