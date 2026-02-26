@@ -2,11 +2,12 @@
 
 from pathlib import Path
 from textx import metamodel_from_file
+from .validators.device_reference_validator import register_validators
 
 
 def load_model(model_path: str):
     """
-    Load and parse an IoTFlow model file.
+    Load and parse an IoTFlow model file with semantic validation.
     
     Args:
         model_path (str): Path to the .iot model file to parse
@@ -17,6 +18,7 @@ def load_model(model_path: str):
     Raises:
         FileNotFoundError: If the grammar or model file is not found
         textx.exceptions.TextXSyntaxError: If the model has syntax errors
+        textx.exceptions.TextXSemanticError: If the model has semantic errors
     """
     # Get path to grammar file relative to this package
     this_dir = Path(__file__).parent
@@ -31,7 +33,10 @@ def load_model(model_path: str):
     # Create metamodel from grammar
     metamodel = metamodel_from_file(str(grammar_path))
     
-    # Parse and return the model
+    # Register semantic validators
+    register_validators(metamodel)
+    
+    # Parse and validate the model
     model = metamodel.model_from_file(model_path)
     return model
 
