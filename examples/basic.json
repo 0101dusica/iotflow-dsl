@@ -1,0 +1,30 @@
+{
+    "sensors": [
+        {
+            "name": "TemperatureSensor",
+            "type": "DHT22",
+            "unit": "celsius"
+        }
+    ],
+    "actuators": [
+        {
+            "name": "Fan",
+            "type": "relay"
+        }
+    ],
+    "rules": [
+        {
+            "name": "HighTemperature",
+            "condition": {
+                "sensor": "TemperatureSensor",
+                "attribute": "value",
+                "operator": ">",
+                "value": 30
+            },
+            "action": {
+                "actuator": "Fan",
+                "command": "turn_on"
+            }
+        }
+    ]
+}

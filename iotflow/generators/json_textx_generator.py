@@ -23,7 +23,15 @@ def json_generator_cli(metamodel, model, output_path, overwrite, debug=False):
         debug: Debug mode flag
     """
     # Create output file path
-    output_path = Path(output_path)
+    if output_path:
+        output_dir = Path(output_path)
+    else:
+        if hasattr(model, '_tx_model_file') and model._tx_model_file:
+            output_dir = Path(model._tx_model_file).parent
+        elif hasattr(model, '_tx_filename') and model._tx_filename:
+            output_dir = Path(model._tx_filename).parent
+        else:
+            output_dir = Path.cwd()
     
     # Use model filename as base for JSON output
     if hasattr(model, '_tx_model_file') and model._tx_model_file:
@@ -36,7 +44,7 @@ def json_generator_cli(metamodel, model, output_path, overwrite, debug=False):
     
     # Create JSON filename
     json_filename = model_file.stem + ".json"
-    output_file = output_path / json_filename
+    output_file = output_dir / json_filename
     
     # Check overwrite protection
     if output_file.exists() and not overwrite:
