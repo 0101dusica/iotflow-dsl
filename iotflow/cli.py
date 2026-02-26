@@ -1,40 +1,13 @@
 # Entry point for IoTFlow DSL CLI.
 
-import os
 import argparse
-from pathlib import Path
-from textx import metamodel_from_file
-
-
-def get_grammar_path():
-    """Get path to the IoTFlow grammar file."""
-    this_dir = Path(__file__).parent
-    return this_dir / "grammar" / "iotflow.tx"
-
-
-def parse_model(model_file):
-    """Parse an IoTFlow model file and return the parsed model."""
-    grammar_path = get_grammar_path()
-    
-    if not grammar_path.exists():
-        raise FileNotFoundError(f"Grammar file not found at: {grammar_path}")
-    
-    if not Path(model_file).exists():
-        raise FileNotFoundError(f"Model file not found at: {model_file}")
-    
-    # Create metamodel from grammar
-    metamodel = metamodel_from_file(str(grammar_path))
-    
-    # Parse the model
-    model = metamodel.model_from_file(model_file)
-    
-    return model
+from . import load_model
 
 
 def validate_model(model_file):
-    """Validate an IoTFlow model file."""
+    """Validate an IoTFlow model file using the load_model function."""
     try:
-        model = parse_model(model_file)
+        model = load_model(model_file)
         
         # Count elements
         sensors = [el for el in model.elements if el.__class__.__name__ == 'Sensor']
@@ -53,19 +26,44 @@ def validate_model(model_file):
         return False
 
 
+def parse_command(args):
+    """Parse a model file and show basic info (bonus command)."""
+    try:
+        model = load_model(args.model)
+        print(f"Model loaded successfully from: {args.model}")
+        print(f"Total elements: {len(model.elements)}")
+        
+        for i, element in enumerate(model.elements, 1):
+            element_type = element.__class__.__name__
+            element_name = element.name
+            print(f"  {i}. {element_type}: {element_name}")
+            
+        return True
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return False
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(description="IoTFlow DSL CLI")
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
-    # Validate command
+    # Validate command  
     validate_parser = subparsers.add_parser('validate', help='Validate an IoTFlow model')
     validate_parser.add_argument('model', help='Path to the model file to validate')
+    
+    # Parse command (bonus)
+    parse_parser = subparsers.add_parser('parse', help='Parse and display IoTFlow model info')
+    parse_parser.add_argument('model', help='Path to the model file to parse')
     
     args = parser.parse_args()
     
     if args.command == 'validate':
         success = validate_model(args.model)
+        exit(0 if success else 1)
+    elif args.command == 'parse':
+        success = parse_command(args)
         exit(0 if success else 1)
     else:
         parser.print_help()
