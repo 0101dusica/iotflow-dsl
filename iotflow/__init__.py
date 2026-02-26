@@ -3,6 +3,7 @@
 from pathlib import Path
 from textx import metamodel_from_file
 from .validators.device_reference_validator import register_validators
+from .validators.rule_validator import register_rule_validators
 
 
 def load_model(model_path: str):
@@ -35,6 +36,7 @@ def load_model(model_path: str):
     
     # Register semantic validators
     register_validators(metamodel)
+    register_rule_validators(metamodel)
     
     # Parse and validate the model
     model = metamodel.model_from_file(model_path)
