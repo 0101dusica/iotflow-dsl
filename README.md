@@ -94,19 +94,82 @@ You should see:
 
 ## Usage
 
-### Validate a Model
+### IoTFlow CLI
+
+IoTFlow provides its own CLI commands for model validation and parsing:
+
+#### Validate a Model
+
+```bash
+python -m iotflow.cli validate examples/basic.iot
+```
+
+#### Parse and Display Model Info
+
+```bash
+python -m iotflow.cli parse examples/basic.iot
+```
+
+### textX CLI (Alternative)
+
+You can also use standard textX commands:
+
+#### Validate a Model
 
 ```bash
 textx check examples/basic.iot
 ```
 
-### Generate JSON Configuration
+#### Generate JSON Configuration
 
 ```bash
 textx generate examples/basic.iot --target json
 ```
 
 This will generate a JSON file in the same directory as the model file.
+
+---
+
+## Examples
+
+The `examples/` directory contains comprehensive IoTFlow DSL demonstrations:
+
+- **`basic.iot`** - Simple temperature sensor and fan control
+- **`multi_sensor.iot`** - Multiple sensors with coordinated rules  
+- **`complex_rules.iot`** - All comparison operators (`<=`, `>=`, `<`, `!=`, `>`, `==`)
+- **`home_automation.iot`** - Realistic home automation scenario
+- **`smart_greenhouse.iot`** - Complex agricultural IoT system
+- **`edge_cases.iot`** - Grammar boundary testing and naming conventions
+- **`validation_test.iot`** - Error testing for LSP validation
+
+Each example demonstrates different aspects of the DSL and validates successfully.
+
+### Python API
+
+Generate JSON directly in Python:
+
+```python
+from iotflow.generators.json_generator import model_to_json_string
+from iotflow.language import iotflow_language
+from textx import metamodel_from_file
+
+# Load model and generate JSON
+mm = metamodel_from_file('iotflow/grammar/iotflow.tx')
+model = mm.model_from_file('examples/basic.iot')
+json_output = model_to_json_string(model)
+print(json_output)
+```
+
+### Direct JSON Generation
+
+You can also generate JSON using the built-in generator:
+
+```python
+from iotflow.generators.json_generator import generate_json
+
+# Generate JSON file directly
+generate_json(model, 'output.json')
+```
 
 ---
 
@@ -193,7 +256,37 @@ iotflow-dsl/
 
 ## Editor Support
 
-See [Editor Setup Instructions](docs/editor-setup.md)
+IoTFlow DSL is designed for Language Server Protocol (LSP) integration:
+
+- Ready for textX-LS support  
+- Syntax highlighting and validation in VS Code
+- Real-time error detection
+- IntelliSense capabilities
+
+See [Editor Setup Instructions](docs/editor-setup.md) for detailed configuration.
+
+---
+
+## Validation Features
+
+The DSL includes comprehensive semantic validation:
+
+- **Device Reference Validation**: Ensures sensors and actuators exist before being referenced
+- **Rule Validation**: Validates actuator actions against allowed command list
+- **Grammar Validation**: Enforces proper syntax and structure
+- **Type Safety**: Consistent property definitions across devices
+
+Errors are reported with clear messages and location information.
+
+---
+
+## Troubleshooting
+
+**Grammar doesn't support comments**: If you get parse errors with `//` comments, remove them from `.iot` files. The current grammar doesn't include comment support.
+
+**Module not found**: Ensure the package is installed with `pip install -e .` and that your virtual environment is activated.
+
+**textX commands not working**: Install textX CLI tools with `pip install textX[cli]` and verify language registration with `textx list-languages`.
 
 ---
 
