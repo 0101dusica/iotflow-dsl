@@ -1,0 +1,32 @@
+sensor TempSensor {
+    type: DHT22
+    unit: celsius
+}
+
+sensor HumidSensor {
+    type: SHT30
+    unit: percentage
+}
+
+actuator CoolingFan {
+    type: relay
+}
+
+actuator Notification {
+    type: buzzer
+}
+
+rule ValidRule {
+    when TempSensor.value > 25
+    then CoolingFan.turn_on
+}
+
+rule HumidityAlert {
+    when HumidSensor.value > 80
+    then Notification.alert
+}
+
+rule CoolingRule {
+    when TempSensor.value < 15
+    then CoolingFan.turn_off
+}

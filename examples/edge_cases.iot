@@ -1,0 +1,52 @@
+sensor temp_sensor_01 {
+    type: DHT22
+    unit: celsius
+}
+
+sensor PRESSURE_MONITOR {
+    type: BMP280
+    unit: hpa
+}
+
+sensor CamelCaseSensor {
+    type: SHT30
+    unit: percent
+}
+
+actuator relay_1 {
+    type: solid_state_relay
+}
+
+actuator MOTOR_CONTROLLER {
+    type: servo_motor
+}
+
+rule ZeroCheck {
+    when temp_sensor_01.value == 0
+    then relay_1.emergency_stop
+}
+
+rule HighValueTest {
+    when PRESSURE_MONITOR.value > 99999
+    then MOTOR_CONTROLLER.activate
+}
+
+rule LowValueTest {
+    when temp_sensor_01.value < 0
+    then MOTOR_CONTROLLER.emergency_stop
+}
+
+rule NegativeValueTest {
+    when CamelCaseSensor.value != 273
+    then relay_1.activate
+}
+
+rule PreciseThreshold {
+    when CamelCaseSensor.value >= 99
+    then MOTOR_CONTROLLER.adjust
+}
+
+rule SmallValueTest {
+    when temp_sensor_01.value <= 1
+    then relay_1.turn_on
+}

@@ -1,0 +1,65 @@
+sensor AirTemp {
+    type: SHT30
+    unit: celsius
+}
+
+sensor AirHumidity {
+    type: SHT30
+    unit: percent
+}
+
+sensor SoilHumidity {
+    type: capacitive_soil
+    unit: percent
+}
+
+sensor LightLevel {
+    type: TSL2591
+    unit: lux
+}
+
+actuator VentilationFan {
+    type: brushless_fan
+}
+
+actuator HeatingMat {
+    type: heating_element
+}
+
+actuator FogMister {
+    type: ultrasonic_mister
+}
+
+actuator WaterPump {
+    type: peristaltic_pump
+}
+
+rule OverheatingProtection {
+    when AirTemp.value > 35
+    then VentilationFan.activate
+}
+
+rule CoolingControl {
+    when AirTemp.value > 28
+    then VentilationFan.turn_on
+}
+
+rule HeatingControl {
+    when AirTemp.value < 18
+    then HeatingMat.activate
+}
+
+rule HumidityIncrease {
+    when AirHumidity.value < 60
+    then FogMister.activate
+}
+
+rule AutoWatering {
+    when SoilHumidity.value < 40
+    then WaterPump.start
+}
+
+rule DaylightSupplement {
+    when LightLevel.value < 15000
+    then VentilationFan.turn_off
+}
