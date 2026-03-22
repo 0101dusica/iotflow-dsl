@@ -79,7 +79,7 @@ def generate_json(model, output_path: str) -> None:
                 "condition": {
                     "sensor": condition.sensor_ref.sensor_name,
                     "attribute": "value",  # Currently fixed in grammar
-                    "operator": condition.operator,
+                    "operator": condition.operator.value if hasattr(condition.operator, 'value') else condition.operator,
                     "value": condition.value
                 },
                 "action": {
@@ -144,7 +144,7 @@ def model_to_json_string(model) -> str:
                 "condition": {
                     "sensor": condition.sensor_ref.sensor_name,
                     "attribute": "value",
-                    "operator": condition.operator,
+                    "operator": condition.operator.value if hasattr(condition.operator, 'value') else condition.operator,
                     "value": condition.value
                 },
                 "action": {
