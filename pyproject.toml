@@ -17,6 +17,9 @@ dependencies = [
 ]
 
 keywords = ["dsl", "textx", "iot", "language-engineering", "domain-specific-language"]
+
+[dependency-groups]
+dev = ["pytest>=8.0.0"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

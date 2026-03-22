@@ -207,3 +207,8 @@ marimo/_lsp/
 __marimo__/
 
 .vscode/
+
+# Project-specific
+CLAUDE.md
+PRESENTATION_PREP.md
+test-install-env/
