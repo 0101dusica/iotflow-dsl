@@ -1,48 +1,15 @@
-# This file marks the iotflow package for IoTFlow DSL.
-
 from pathlib import Path
-from textx import metamodel_from_file
-from .validators.device_reference_validator import register_validators
-from .validators.rule_validator import register_rule_validators
+
+from .parser.parse import parse_file, parse_str
+from .model import Model
 
 
-def load_model(model_path: str):
+def load_model(model_path: str) -> Model:
     """
     Load and parse an IoTFlow model file with semantic validation.
-    
-    Args:
-        model_path (str): Path to the .iot model file to parse
-        
-    Returns:
-        textX model object containing the parsed IoT model
-        
-    Raises:
-        FileNotFoundError: If the grammar or model file is not found
-        textx.exceptions.TextXSyntaxError: If the model has syntax errors
-        textx.exceptions.TextXSemanticError: If the model has semantic errors
     """
-    # Get path to grammar file relative to this package
-    this_dir = Path(__file__).parent
-    grammar_path = this_dir / "grammar" / "iotflow.tx"
-    
-    if not grammar_path.exists():
-        raise FileNotFoundError(f"Grammar file not found at: {grammar_path}")
-    
-    if not Path(model_path).exists():
-        raise FileNotFoundError(f"Model file not found at: {model_path}")
-    
-    # Create metamodel from grammar
-    metamodel = metamodel_from_file(str(grammar_path))
-    
-    # Register semantic validators
-    register_validators(metamodel)
-    register_rule_validators(metamodel)
-    
-    # Parse and validate the model
-    model = metamodel.model_from_file(model_path)
-    return model
+    return parse_file(Path(model_path))
 
 
-# Package metadata
 __version__ = "0.1.0"
-__all__ = ["load_model"]
+__all__ = ["load_model", "parse_file", "parse_str", "Model"]
