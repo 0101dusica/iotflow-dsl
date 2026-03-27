@@ -31,6 +31,9 @@ def generate_readings(
             readings[name] = overrides[name]
         else:
             unit = _get_unit(sensor)
-            lo, hi = DEFAULT_RANGES.get(unit, DEFAULT_RANGE)
-            readings[name] = round(random.uniform(lo, hi), 2)
+            if unit == "boolean":
+                readings[name] = float(random.choice([0, 1]))
+            else:
+                lo, hi = DEFAULT_RANGES.get(unit, DEFAULT_RANGE)
+                readings[name] = round(random.uniform(lo, hi), 2)
     return readings
